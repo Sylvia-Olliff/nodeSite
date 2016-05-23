@@ -1,0 +1,91 @@
+<!-- views/minecraft-menu -->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Minecraft Server Control</title>
+
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
+
+    <style type="text/css">
+		body {
+			padding-top:80px; word-wrap:break-word; 
+		}
+        #start {
+            margin-bottom: 25px;
+        }
+        #console {
+            overflow: auto;
+            height: 450px;
+            width: 850px;
+        }
+    </style>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            var socket = io.connect('http://Titan-Fields.ddns.net:8080/');
+            //var socket = io.connect('http://localhost/');
+            var User = "<%= user.userData.username %>";
+            var Name = "<%- name %>";
+            var displayName = "<%- displayName %>";
+            $('#start').on('click', function(){
+                socket.emit('start', Name);
+                socket.on('fail', function(msg){
+                    if (msg == "start") {
+                        socket.emit('get_status');
+                        socket.on('status', function(name){
+                            Name = name;
+                        });
+                    }
+                });
+            });
+
+            $('#servName').html(displayName);
+
+            socket.on('console', function(data){
+                $('#console').append(data + "<br />");
+                var objDiv = document.getElementById("console");
+                objDiv.scrollTop = objDiv.scrollHeight;
+            });
+
+            $('#command').on("keypress", function(evt){
+                if (evt.which == 13) {
+                    evt.preventDefault()
+                    var cmd = $('#command').val();
+                    socket.emit('command', cmd, User);
+                    $('#command').val("");
+                }
+            });
+        });
+
+    </script>
+</head>
+<body>
+	<div class="container">
+		<div class="page-header text-center">
+        	<h1><div id="servName"></div> Console</h1>
+       		<a href="/logout" class="btn btn-default btn-sm">Logout</a>
+       		<a href="/minecraft-menu" class="btn btn-default btn-sm">Back</a>
+    	</div>
+
+    	<div class="row">
+            <button id="start" class="btn btn-danger btn-lg">Start Server</button>
+    		<div class="col-sm-11">
+
+    			<div class="well">
+                    
+                    <div id="console"></div>
+                    <br />
+    			</div>
+                <br /><br />
+                <div class="well">
+                    <input id="command" type="text" class="form-control" name="command"></input>
+                </div>
+    		</div>
+    	</div>
+	</div>
+</body>
+</html>

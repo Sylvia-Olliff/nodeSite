@@ -1,0 +1,74 @@
+<!-- views/char-menu -->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Character Gen Control</title>
+
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
+
+    <style type="text/css">
+		body {
+			padding-top:80px; word-wrap:break-word; 
+		}
+        #dataEntries tr td {
+            padding-left: 50px;
+        }
+    </style>
+    <script type="text/javascript">
+        jQuery(function() {
+
+            $('#featsEntry').on("click", function() {
+                window.location.href = "/feats-entry";
+            });
+            $('#skillsEntry').on("click", function() {
+                window.location.href = "/skills-entry";
+            });
+            $('#racesEntry').on("click", function() {
+                window.location.href = "/races-entry";
+            });
+            $('#classesEntry').on("click", function() {
+                window.location.href = "/classes-entry";
+            });
+        });
+    </script>
+</head>
+<body>
+	<div class="container">
+		<div class="page-header text-center">
+        	<h1>Character Generation Menu</h1>
+       		<a href="/logout" class="btn btn-default btn-sm">Logout</a>
+            <a href="/main" class="btn btn-default btn-sm">Back</a>
+    	</div>
+
+    	<div class="row">
+
+    		<div class="col-sm-9">
+    			<div class="well">
+    				<p>DO NOT USE UNLESS YOU HAVE BEEN CONTACTED BY JOE!</p>
+                    <div id="msgBoard" class="alert alert-warning"></div>
+                    <table id="dataEntries">
+                        <tr>
+                            <td>
+                                <input id="featsEntry" class="btn btn-warning btn-lg" type="button" value="Feats Entry" />
+                            </td>
+                            <td>
+                                <input id="skillsEntry" class="btn btn-warning btn-lg" type="button" value="Skills Entry" />
+                            </td>
+                            <td>
+                                <input id="racesEntry" class="btn btn-warning btn-lg" type="button" value="Races Entry" />
+                            </td>
+                            <td>
+                                <input id="classesEntry" class="btn btn-warning btn-lg" type="button" value="Classes Entry" />
+                            </td>
+                        </tr>
+                    </table>
+    			</div>
+    		</div>
+    	</div>
+	</div>
+</body>
+</html>

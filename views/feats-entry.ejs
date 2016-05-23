@@ -1,0 +1,282 @@
+<!-- views/feats-entry -->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Feats Entry Form</title>
+
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/entries.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        jQuery(function() {
+            $('#msgBoard').hide();
+
+            $('.num').keypress(function(evt) {
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                    evt.preventDefault();
+                }
+                return true;
+            });
+
+            if ("<%- error %>" != "") {
+                $('#msgBoard').show();
+                $('#msgBoard').html("<%- error %>");
+            } else if ("<%- message %>" != "") {
+                $('#msgBoard').show();
+                $('#msgBoard').html("<%- message %>");
+            }
+
+            $('#featType').on('blur', function() {
+                var sendData = $(this).val();
+                if (sendData != "") {
+                    $.post("/feats-selection", {data : sendData}, function(res) {
+                        $("#details").html(res);
+                    });
+                }
+            });
+
+            $('#writeFeats').on('click', function(){
+                var featsData = $('#featsEntryForm').serializeArray();                
+                if ($('#featName').val() == "") {
+                    alert("You must enter a name for the feat!");
+
+                } else {
+                    $.post("/feats-entry", {data : featsData}, function(res){
+                        window.location.href = res.response;
+                    });
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+	<div id="container" class="container">
+		<div class="page-header text-center">
+        	<h1>3.5 DND Feats Entry Form</h1>
+       		<a href="/logout" class="btn btn-default btn-sm">Logout</a>
+            <a href="/main" class="btn btn-default btn-sm">Back</a>
+    	</div>
+
+    	<div class="row">
+
+    		<div class="col-sm-12">
+    			<div class="well">
+    				<h3>DO NOT USE UNLESS YOU HAVE BEEN CONTACTED BY JOE!</h3>
+                    <ul>
+                        <li>For PreReqs seperate each feat by a single comma only. i.e. ("Power Attack,Cleave,Great Cleave")</li>
+
+                        <li>If the feat is class specific, in the PreReq section enter that in as "class-className" i.e. "class-fighter" follow this format for all special PreReqs, i.e. "BAB-5"</li>
+                    </ul>
+                    <button id='writeFeats' type='button' class='btn btn-warning btn-md'>Submit Feat</button>
+
+                     <!-- ======== Insert Message Div HERE ======== -->
+
+                    <form id="featsEntryForm">
+                        <table id="featHeader">
+                            <tr>
+                                <td>
+                                    <label for='featName'>Feat Name: </label>
+                                    <input id="featName" type='text' class='form-control' name='featName' size='15'>
+                                </td>
+                                <td>
+                                    <label for='featPre'>Prerequisites: </label>
+                                    <textarea class='form-control' name='featPre' rows='4' cols='6'></textarea>
+                                </td>
+                                <td>
+                                    <label for="featType">Bonus Type (if any):</label>
+                                    <select id="featType" class='form-control' name='featType'>
+                                        <option value="">Select a type</option>
+                                        <option value='META'>Meta</option>
+                                        <option value='SPLABL'>Spell Ability</option>
+                                        <option value='AOO'>Attacks of Opportunity</option>
+                                        <option value='SKILL'>Skill</option>
+                                        <option value='STAT'>Stat</option>
+                                        <option value='AC'>AC</option>
+                                        <option value='HP'>HP</option>
+                                        <option value='BAB'>Attack Bonus</option>
+                                        <option value='NUMATTK'>Number of Attacks</option>
+                                        <option value='INIT'>Initiative</option>
+                                        <option value='LVLCHK'>Level Check</option>
+                                        <option value='PROF'>Proficiency</option>
+                                        <option value='BONUSATTR'>Attribute for Bonus</option>
+                                        <option value='CLASS'>Class Feature</option>
+                                        <option value='DR'>DR</option>
+                                        <option value='WPNDMG'>Weapon Damage</option>
+                                        <option value='ARMOR'>Armor Bonus</option>
+                                        <option value='PSI'>Psionics (WIP)</option>
+                                        <option value='RESIST'>Resistance</option>
+                                        <option value='XTRA'>Extra Magic Item Space</option>
+                                        <option value='HD'>Hit Dice</option>
+                                        <option value='IMMUNE'>Immunity</option>
+                                        <option value='CRITRANGE'>Crit Range</option>
+                                        <option value='CRITMOD'>Crit Modifier</option>
+                                        <option value='MOVE'>Move Speed</option>
+                                        <option value='MOVESKILL'>Move Ability</option>
+                                        <option value='OTHER'>Other</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <label for="book">Book: </label>
+                                    <select id="book" class="form-control" name="book">
+                                        <option value='AN'>FR3 Anauroch:The Empire of Shade</option>
+                                        <option value='AE'>Arms and Equipment Guide</option>
+                                        <option value='BFK'>Barrow of the Forgotten King</option>
+                                        <option value='BB'>Bastion of Broken Souls</option>
+                                        <option value='BC'>Book of Challenges</option>
+                                        <option value='BE'>Book of Exalted Deeds</option>
+                                        <option value='BV'>Book of Vile Darkness</option>
+                                        <option value='CR'>Champions of Ruin</option>
+                                        <option value='CV'>Champions of Valor</option>
+                                        <option value='CIP'>City of Peril</option>
+                                        <option value='COS'>City of Splendors:Waterdeep</option>
+                                        <option value='CSQ'>City of the Spider Queen</option>
+                                        <option value='CI'>Cityscape</option>
+                                        <option value='CAd'>Complete Adventure</option>r
+                                        <option value='CAr'>Complete Arcane</option>
+                                        <option value='CC'>Complete Champion</option>
+                                        <option value='CD'>Complete Divine</option>
+                                        <option value='CM'>Complete Mage</option>
+                                        <option value='CP'>Complete Psionic</option>
+                                        <option value='CS'>Complete Scoundrel</option>
+                                        <option value='CW'>Complete Warrior</option>
+                                        <option value='CO'>Cormyr: The Tearing of the Weave</option>
+                                        <option value='DG'>DND Gazetteer</option>
+                                        <option value='DH'>Deep Horizon</option>
+                                        <option value='DF'>Defenders of the Faith</option>
+                                        <option value='DD'>Deities and Demigods</option>
+                                        <option value='DR'>Draconomicon</option>
+                                        <option value='DM'>Dragon Magic</option>
+                                        <option value='DCS'>Dragonlance Campaign Setting</option>
+                                        <option value='DRA'>Dragonmarked</option>
+                                        <option value='DE'>Dragons of Eberron</option>
+                                        <option value='DRF'>Dragons of Faerûn</option>
+                                        <option value='DRU'>Drow of the Underdark</option>
+                                        <option value='DMG'>Dungeon Master's Guide (3.5)</option>
+                                        <option value='DMG2'>Dungeon Master's Guide II</option>
+                                        <option value='DU'>Dungeonscape</option>
+                                        <option value='ECS'>Eberron Campaign Setting</option>
+                                        <option value='ELE'>Elder Evils</option>
+                                        <option value='EA'>Enemies and Allies</option>
+                                        <option value='EL'>Epic Level Handbook</option>
+                                        <option value='EE'>Exemplars of Evil</option>
+                                        <option value='XPH'>Expanded Psionics Handbook</option>
+                                        <option value='RAV'>Expedition to Castle Ravenloft</option>
+                                        <option value='EDP'>Expedition to the Demonweb Pits</option>
+                                        <option value='ERG'>Expedition to the Ruins of Greyhawk</option>
+                                        <option value='EU'>Expedition to Undermountain</option>
+                                        <option value='EH'>Explorer's Handbook</option>
+                                        <option value='ELQ'>Eyes of the Lich Queen</option>
+                                        <option value='FP'>Faiths and Pantheons</option>
+                                        <option value='FE'>Faiths of Eberron</option>
+                                        <option value='FLFD'>Fantastic Locations:Fane of the Drow</option>
+                                        <option value='FLFR'>Fantastic Locations:Fields of Ruin</option>
+                                        <option value='FLHP'>Fantastic Locations:Hellspike Prison</option>
+                                        <option value='FF'>Fiend Folio</option>
+                                        <option value='FCI'>Fiendish Codex I</option>
+                                        <option value='FCII'>Fiendish Codex II</option>
+                                        <option value='FO'>The Forge of Fury</option>
+                                        <option value='FW'>The Forge of War</option>
+                                        <option value='FRCS'>Forgotten Realms Campaign Setting</option>
+                                        <option value='FY'>Fortress of the Yuan-Ti</option>
+                                        <option value='FR'>Frostburn</option>
+                                        <option value='GH'>Ghostwalk</option>
+                                        <option value='GHR'>Grand History of the Realms</option>
+                                        <option value='GC'>Grasp of the Emerald Claw</option>
+                                        <option value='HN'>Heart of Nightfang Spire</option>
+                                        <option value='HBG'>Hero Builder's Guidebook</option>
+                                        <option value='HB'>Heroes of Battle</option>
+                                        <option value='HH'>Heroes of Horror</option>
+                                        <option value='LM'>Libris Mortis</option>
+                                        <option value='LG'>Living Greyhawk Gazetteer</option>
+                                        <option value='LF'>Lord of the Iron Fortress</option>
+                                        <option value='LD'>Lords of Darkness</option>
+                                        <option value='LOM'>Lords of Madness</option>
+                                        <option value='LE'>Lost Empires of Faerûn</option>
+                                        <option value='MIC'>Magic Item Compendium</option>
+                                        <option value='MOE'>Magic of Eberron</option>
+                                        <option value='MAG'>Magic of Faerûn</option>
+                                        <option value='MOI'>Magic of Incarnum</option>
+                                        <option value='MP'>Manual of the Planes</option>
+                                        <option value='MW'>Masters of the Wild</option>
+                                        <option value='MH'>Miniatures Handbook</option>
+                                        <option value='MON'>Monster Compendium: Monsters of Faerûn</option>
+                                        <option value='MM'>Monster Manual</option>
+                                        <option value='MM2'>Monster Manual II</option>
+                                        <option value='MM3'>Monster Manual III</option>
+                                        <option value='MM4'>Monster Manual IV</option>
+                                        <option value='MM5'>Monster Manual V</option>
+                                        <option value='MYS'>Mysteries of the Moonsea</option>
+                                        <option value='OA'>Oriental Adventures</option>
+                                        <option value='PLH'>Planar Handbook</option>
+                                        <option value='PE'>Player's Guide to Eberron</option>
+                                        <option value='PG'>Player's Guide to Faerûn</option>
+                                        <option value='PHB' selected>Player's Handbook</option>
+                                        <option value='PH2'>Player's Handbook II</option>
+                                        <option value='PF'>Power of Faerûn</option>
+                                        <option value='RD'>Races of Destiny</option>
+                                        <option value='RE'>Races of Eberron</option>
+                                        <option value='RAC'>Races of Faerûn</option>
+                                        <option value='RS'>Races of Stone</option>
+                                        <option value='RW'>Races of the Wild</option>
+                                        <option value='RH'>Red Hand of Doom</option>
+                                        <option value='RT'>Return to the Temple of Elemental Evil</option>
+                                        <option value='RC'>Rules Compendium</option>
+                                        <option value='SA'>Sandstorm</option>
+                                        <option value='SS'>Savage Species</option>
+                                        <option value='SOS'>Secrets of Sarlona</option>
+                                        <option value='SX'>Secrets of Xen’drik</option>
+                                        <option value='SK'>Serpent Kingdoms</option>
+                                        <option value='SSL'>FR2 Shadowdale:The Scouring of the Land</option>
+                                        <option value='SL'>Shadows of the Last War</option>
+                                        <option value='SH'>Sharn:City of Towers</option>
+                                        <option value='SHG'>The Shattered Gates of Slaughtergarde</option>
+                                        <option value='SHS'>Shining South</option>
+                                        <option value='SM'>Silver Marches</option>
+                                        <option value='SIS'>The Sinister Spire</option>
+                                        <option value='SAS'>Song and Silence: A Guidebook to Bards and Rogues</option>
+                                        <option value='SG'>Sons of Gruumsh</option>
+                                        <option value='SD'>The Speaker in Dreams</option>
+                                        <option value='StS'>The Standing Stone</option>
+                                        <option value='SB'>Stronghold Builder's Guidebook</option>
+                                        <option value='SC'>Spell Compendium</option>
+                                        <option value='SF'>Sword and Fist: A Guidebook to Monks and Fighters</option>
+                                        <option value='TB'>Tome and Blood: A Guidebook to Wizards and Sorcerers</option>
+                                        <option value='TOB'>Tome of Battle: The Book of Nine Swords</option>
+                                        <option value='TM'>Tome of Magic</option>
+                                        <option value='UNA'>Unapproachable East</option>
+                                        <option value='UND'>Underdark</option>
+                                        <option value='UA'>Unearthed Arcana</option>
+                                        <option value='VGD'>Voyage of the Golden Dragon</option>
+                                        <option value='WB'>Whispers of the Vampire's Blade</option>
+                                    </select>
+                                    <label for="page">Page: </label>
+                                    <input id="page" type='text' class='form-control num' name='page' size=4>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="short">Short Description: </label>
+                                    <input id="short" type='text' class='form-control' name='short' size='15'>
+                                </td>
+                                <td>
+                                    <label for="long">Long Description: </label>
+                                    <textarea id="long" class='form-control' name='long' rows='10' cols='30'></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                        <br /><br />
+                        <div id="details"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <br />
+        <br />
+	</div>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!-- views/main-menu.ejs -->
+<!doctype html>
+<html>
+<head>
+    <title>Titan Control Room</title>
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" type="text/css" href="/main-menu.css">
+
+    <script type="text/javascript">
+        jQuery(function() {
+        $('#minecraft').on("click", function() {
+            window.location.href = "/minecraft-menu";
+        });
+        $('#pdfReader').on("click", function() {
+            window.location.href = "/pdf-menu";
+        });
+        $('#charGen').on("click", function() {
+            window.location.href = "/char-menu";
+        });
+        $('#profile').on("click", function() {
+            window.location.href = "/user-profile";
+        });
+
+
+
+        if ("<%- pollHtml %>" != "FAILED") {
+            $('#pollSpace').html("<%- pollHtml %>");
+            $('#pollVote').on("click", function() {
+                var name = $('#pollName').contents().filter(function(){
+                    return this.nodeType == 3;
+                }).text();
+                name = $.trim(name);
+                var vote = $("input[type='radio'][name='pollSelect']:checked").val();
+                var sendData = name + "," + vote;
+
+                $.post("/poll-vote", {stringData : sendData}, function(data) {
+                    alert(data);
+                });
+            });
+        }
+    });
+
+  </script>
+
+</head>
+<body>
+<div class="container">
+
+    <div class="page-header text-center">
+        <h1>Main Menu</h1>
+        <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+    </div>
+
+    <div class="row">
+
+        <div class="col-sm-11">
+            <div class="well">
+                <h3>
+                <% if (user.userData.prof_pic.length > 0) { %>
+                    <img src="<%- user.userData.prof_pic %>" alt="Profile" height="75" width="75">
+                <% } else { %>
+                    <span class="fa fa-user"></span>
+                <% } %>
+                Welcome <%= user.userData.username %><input id="profile" class="btn btn-default btn-sm" type="button" value="Update Profile" />
+                </h3> 
+
+                <br />
+                <table id="headers">
+                    <tr>
+                        <td>
+                            <input id="minecraft" class="btn btn-warning btn-lg" type="button" value="Minecraft" />
+                        </td>
+                        <td>
+                            <!-- <input id="pdfReader" class="btn btn-warning btn-lg" type="button" value="PDF Viewer" /> -->
+                        </td>
+                        <td>
+                            <input id="charGen" class="btn btn-warning btn-lg" type="button" value="Character Gen" />
+                        </td>
+                    </tr>
+                </table>
+                <br /><br />
+                <br /><br />
+                
+                <div id="pollSpace"></div>
+                <table id="features">
+                    <tr>
+                        <td>
+                            <label for="plannedFeatures">Planned Features</label>
+                            <ul id="plannedFeatures">
+                                <li>
+                                    View all currently created Minecraft Servers and their associated types. (i.e. for TerraFirmaPunk - These worlds exists...)
+                                </li>
+                                <li>
+                                    Upload your own Minecraft World (YOU must ensure that your versions match, i.e. Minecraft 1.8.9 receives worlds from 1.8.9)
+                                </li>
+                                <li>
+                                    Chat Room (including PMs)
+                                </li>
+                                <li>
+                                    Various Character generators (Systems currently planned for support - DND 3.5, ShadowRun, 7th seas(the newest edition), Heroes(maybe), Ditch Char gen, Ditch Story Gen) The DND generator will have the following features: ALL feats, skills, abilities, classes, races, and spells. Calculate synergies and modifiers in real time, output to multiple formats (PDF, doc, flatText), include reference page when exported showing a full list of books included and page references, and allow restriction to/of books. This is a large undertaking in regards to data entry, and volunteers would be appreciated. 
+                                </li>
+                            </ul>
+                        </td>
+                        <td>
+                            <label for="currentFeatures">Current Features</label>
+                            <ul id="currentFeatures">
+                                <li>
+                                    View currently active Minecraft Server
+                                </li>
+
+                                <li>
+                                    View all users currently logged into a minecraft server
+                                </li>
+                                <li>
+                                    Login and registration profile
+                                </li>
+                                <li>
+                                    Update profile picture (Just for you RJ)
+                                </li>
+                                <li>
+                                    Update server properties for select Minecraft servers
+                                </li>
+                                <li>
+                                    Remote start Minecraft Servers with remote console, and command interface
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>

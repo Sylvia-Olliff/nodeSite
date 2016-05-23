@@ -1,0 +1,49 @@
+body { 
+    padding-top:80px; word-wrap:break-word; 
+}
+
+#headers {
+    width: 950px;
+    text-align: center;
+    margin-left: 50px;
+}
+
+#profile {
+    margin-left: 50px;
+}
+
+#adminUser {
+    margin-top: 50px;
+}
+
+#features {
+    width: 950px;
+    padding: 15px;
+}
+
+#features td {
+    width: 50%;
+    vertical-align: top;
+}
+
+#plannedFeatures li, #currentFeatures li {
+    padding: 10px;
+}
+
+#pollSpace {
+    text-align: center;
+    width: 950px;
+}
+
+#pollForm table tr td input {
+    margin: 15px;
+}
+
+#pollForm table {
+    width: 900px;
+}
+
+#desc {
+    text-align: center;
+    margin: 5px;
+}

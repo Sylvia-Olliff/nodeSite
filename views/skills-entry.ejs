@@ -1,0 +1,86 @@
+<!-- views/feats-entry -->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Skills Entry Form</title>
+
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.css"/>
+    <link rel="stylesheet" type="text/css" href="/entries.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        jQuery(function() {
+            $('#Entry').html("<%- formHtml %>");
+            setHeaderCSS(8);
+
+            $('.num').keypress(function(evt) {
+                var charCode = (evt.which) ? evt.which : evt.keyCode;
+                if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+                    evt.preventDefault();
+                }
+                return true;
+            });
+
+            $('#writeSkills').on('click', function(){
+                var skillsInfo = $('#skillsEntryForm').serializeArray();
+                skillsInfo = JSON.stringify(skillsInfo,null,2);
+                skillsData = JSON.parse(skillsInfo);
+
+                for (var i = 0; i < skillsData.length; i++) {
+                    if(skillsData[i].value == "") {
+                        delete skillsData[i]
+                    }
+                }
+
+                $.post("/skills-entry", {data : skillsData}, function(res){
+                    window.location.href = res.response;
+                });
+            });
+
+            function setHeaderCSS(size) {
+                var i;
+                var header = $('#headers').children();
+                var field = $('#list-table').children().children();
+                for(i = 0; i < size; i++) {             
+                    header.css("width", function(){
+                        var temp = field.width();
+                        return temp;    
+                    });
+                    
+                    field = field.next();       
+                    header = header.next();
+                }           
+            }
+        });
+    </script>
+</head>
+<body>
+	<div class="container">
+		<div class="page-header text-center">
+        	<h1>3.5 DND Skills Entry Form</h1>
+       		<a href="/logout" class="btn btn-default btn-sm">Logout</a>
+            <a href="/main" class="btn btn-default btn-sm">Back</a>
+    	</div>
+
+    	<div class="row">
+
+    		<div class="col-sm-6">
+    			<div class="well">
+    				<h3>DO NOT USE UNLESS YOU HAVE BEEN CONTACTED BY JOE!</h3>
+                    <ul>
+                        <li>For Synergies these are other skills that at rank 5 INCREASE THIS SKILL and are to be entered like so, "SkillA-SkillB,SkillA-SkillB,SkillC". SkillA and SkillB are a combination of two skills that at rank 5 increase this skill, SkillC is a single skill that at rank 5 increases this skill.</li> 
+                    </ul>
+                    <button id='writeSkills' type='button' class='btn btn-warning btn-md'>Submit Skills</button>
+    			</div>
+    		</div>
+
+    	</div>
+        <form id="skillsEntryForm">
+            <div id="Entry"></div>
+        </form>
+	</div>
+</body>
+</html>

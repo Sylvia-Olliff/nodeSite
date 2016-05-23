@@ -1,0 +1,78 @@
+<!-- views/minecraft-menu -->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Minecraft Server Control</title>
+    
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
+
+    <style type="text/css">
+		body {
+			padding-top:80px; word-wrap:break-word; 
+		}
+    </style>
+
+    <script type="text/javascript">
+        jQuery(function() { 
+
+            var names = <%- JSON.stringify(names) %>;
+            var data = <%- JSON.stringify(data) %>;
+            // data = data.split(',');
+            // names = names.split(',');
+            var content = "<form id='sprop_submit' action='/sprop-submit' method='post'><table id='s_props'>";
+            for (var i = 0; i < names.length - 1; i++) {
+                content = content + "<tr><td><b>" + names[i] + "</b></td><td>";
+                content = content + "<input id=" + i + " type='text' name=" + i + "  size='20' maxlength='20' value='" + data[i] + "' /></td></tr>";
+            }
+            content = content + "</table><br /><button id='updateProp' type='button' class='btn btn-warning btn-md'>Update Properties</button></form>";
+            $('#Prop').html(content);
+            $('#updateProp').on("click", function() {
+                var sendData = "<%= server_name %>,";
+                for (var i = 0; i < names.length-1; i++) {
+                    if (i == names.lenth-2) {
+                        sendData = sendData + names[i] + "=" + $('#' + i).val();
+                    } else {
+                        sendData = sendData + names[i] + "=" + $('#' + i).val() + ",";
+                    }
+                }
+                
+
+                $.post("/sprop-update",{stringData : sendData}, function(data){
+                    if(typeof data.redirect == 'string')
+                    {
+                        window.location.href = data.redirect;
+                    }
+                });
+            });
+
+
+        });
+    </script>
+</head>
+<body>
+	<div class="container">
+		<div class="page-header text-center">
+        	<h1>Server Properties for <%= display_name %></h1>
+       		<a href="/logout" class="btn btn-default btn-sm">Logout</a>
+       		<a href="/minecraft-menu" class="btn btn-default btn-sm">Back</a>
+    	</div>
+
+    	<div class="row">
+
+    		<div class="col-sm-6">
+    			<div class="well">
+    				<p>UNDER CONSTRUCTION</p>
+                    <div id="Prop"></div>
+                    
+                    <br /><br />
+                    
+    			</div>
+    		</div>
+    	</div>
+	</div>
+</body>
+</html>

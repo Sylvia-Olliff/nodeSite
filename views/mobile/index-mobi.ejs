@@ -1,0 +1,35 @@
+<!-- views/index.ejs -->
+<!doctype html>
+<html>
+<head>
+    <title>Node Authentication</title>
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+    <link rel="stylesheet" type="text/css" href="/jquery.mobile.custom.structure.min.css">
+    <link rel="stylesheet" type="text/css" href="/jquery.mobile.custom.theme.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="../js/jquery.mobile.custom.min.js"></script>
+    <style>
+        body        { padding-top:80px; }
+        #pageone {
+            width: 98%;
+        }
+    </style>
+</head>
+<body>
+<div data-role="page" id="pageone" class="container">
+
+    <div data-role="header" class="page-header jumbotron text-center">
+        <h1><span class="fa fa-lock"></span> User Authentication Required</h1>
+
+        <p>Login or Register with:</p>
+
+        <a href="/login" class="btn btn-default btn-lg"><span class="fa fa-user"></span> User Login</a>
+        <a href="/signup" class="btn btn-default btn-lg"><span class="fa fa-user"></span> User Signup</a>
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!-- views/poll-create -->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Poll Creation Menu</title>
+
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
+
+    <style type="text/css">
+		body {
+			padding-top:80px; word-wrap:break-word; 
+		}
+    </style>
+
+    <script type="text/javascript">
+        jQuery(function() { 
+            var content = "<form id='pollCreatForm' action='/poll-create' method='post'><table>";
+            content = content + "<tr><td><b>Poll Name</b></td><td><input id='PNAME' type='text' name='PNAME' value='' /> </td></tr>";
+            for (var i = 0; i < 10; i++) {
+                content = content + "<tr><td>";
+                content = content + "<label for='V" + i + "'>Values</label>";
+                content = content + "<input id='V" + i + "' type='text' name='V" + i + "' value='' /></td><td>";
+                content = content + "<label for='Q" + i + "'>Questions</label>";
+                content = content + "<input id='Q" + i + "' type='text' name='Q" + i + "' value='' /></td></tr>";
+            }
+            content = content + "</table><br /><button id='pollSubmit' type='button' class='btn btn-warning btn-sm'> Submit Poll</button></form>";
+            $('#pollCreate').html(content);
+            $('#pollSubmit').on("click", function() {
+                var sendData = $('#PNAME').val() + ",";
+                var lastOne = false;
+                for (var i = 0; i < 10; i++) {
+                    if(i == 9 || $('#V' + (i + 1)).val() == "") {
+                        lastOne = true;
+                    }
+                    if (lastOne) {
+                        sendData = sendData + $('#V' + i).val() + "," + $('#Q' + i).val();
+                        i = 10;
+                    } else {
+                        sendData = sendData + $('#V' + i).val() + "," + $('#Q' + i).val() + ",";
+                    }
+                }
+                
+                $.post("/poll-create",{stringData : sendData}, function(data){
+                    if(typeof data.redirect == 'string')
+                    {
+                        window.location.href = data.redirect;
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+	<div class="container">
+		<div class="page-header text-center">
+        	<h1>Create Poll Form</h1>
+       		<a href="/logout" class="btn btn-default btn-sm">Logout</a>
+       		<a href="/main" class="btn btn-default btn-sm">Back</a>
+    	</div>
+    
+    	<div class="row">
+        
+    		<div class="col-sm-6">
+    			<div class="well">  
+                    <div id="pollCreate"></div>
+                    
+                    <br /><br />
+                    
+    			</div>
+    		</div>
+    	</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!-- views/minecraft-menu -->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>User Profile</title>
+
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
+
+    <style type="text/css">
+		body {
+			padding-top:80px; word-wrap:break-word; 
+		}
+
+        #profile_pic_file {
+            width: 225px;
+        }
+
+        #profile_pic_update {
+            margin-top: 20px;
+        }
+
+        #profile_Properties td {
+            padding: 25px;
+        }
+    </style>
+</head>
+<body>
+	<div class="container">
+		<div class="page-header text-center">
+        	<h1><%= user.userData.username %>'s Profile</h1>
+       		<a href="/logout" class="btn btn-default btn-sm">Logout</a>
+            <a href="/main" class="btn btn-default btn-sm">Back</a>
+    	</div>
+
+    	<div class="row">
+
+    		<div class="col-sm-6">
+    			<div class="well">
+                    <% if (message.length > 0) { %>
+                        <div class="alert alert-warning"><%- message %></div>
+                    <% } %>
+                    <form id="uploadForm" action="/pic-profile" method="POST" enctype="multipart/form-data" >
+                        <table id="profile_Properties">
+                            <tr>                        
+                                <td>
+                                    <label for="profile_pic_file">Profile Picture</label>
+                                    <input id="profile_pic_file" name="image" class="form-control" type="file" />
+                                </td>
+                                <td>
+                                    <input id="profile_pic_update" class="btn btn-default btn-md" type="submit" value="Update Picture" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input id="profile_pass_change" class="btn btn-default btn-md" type="button" value="Change Password" />
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+    			</div>
+    		</div>
+    	</div>
+	</div>
+</body>
+</html>

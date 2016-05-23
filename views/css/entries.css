@@ -1,0 +1,21 @@
+		body {
+			padding-top:80px; word-wrap:break-word; 
+		}
+
+		#container {
+			width: 90%;
+		}
+
+		#featsEntryForm {
+			width: 90%;
+		}
+
+		#featHeader td {
+			width: 25%;
+			padding: 10px;
+		}
+
+		#featDetails tr td {
+			padding: 15px;
+		}
+

@@ -1,0 +1,95 @@
+<!-- views/minecraft-menu -->
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Minecraft Server Control</title>
+
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js" integrity="sha256-xNjb53/rY+WmG+4L6tTl9m6PpqknWZvRt0rO1SRnJzw=" crossorigin="anonymous"></script>
+
+    <style type="text/css">
+		body {
+			padding-top:80px; word-wrap:break-word; 
+		}
+    </style>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+        jQuery(function() { 
+            $('#openProp').on("click", function() {
+                var sel = $('#sname_select').val();
+                window.location.href = "/sprop-select?selection=" + sel;
+            });
+            $('#startServ').on("click", function() {
+                var sel = $('#sname_select').val();
+                window.location.href = "/server-console?selection=" + sel;
+            });
+
+            $('#activeServer').html("<b>Currently Active Server:</b> <%= active %>");
+
+            var socket = io.connect('http://Titan-Fields.ddns.net:8080/');
+            initialCheck();
+            startCheck();
+            socket.on('players', function(data){
+                if(data != null) {
+                    $('#online').html("<p>Players Online: " + data + "</p>");
+                } else {
+                    $('#online').html("<p>Players Online: None</p>");
+                }
+            });
+
+            function startCheck() {
+                window.setInterval(function() {
+                    socket.emit('list');
+                    setTimeout(function(){
+                        socket.emit('checkList');
+                    }, 3000);
+                }, 60000);
+            }
+
+            function initialCheck() {
+                socket.emit('list');
+                setTimeout(function() {
+                    socket.emit('checkList');
+                }, 3000);
+            }
+        });
+    </script>
+</head>
+<body>
+	<div class="container">
+		<div class="page-header text-center">
+        	<h1>Minecraft Control Menu</h1>
+       		<a href="/logout" class="btn btn-default btn-sm">Logout</a>
+       		<a href="/main" class="btn btn-default btn-sm">Back</a>
+    	</div>
+    
+    	<div class="row">
+        
+    		<div class="col-sm-6">
+    			<div class="well">   
+                    <% if (message.length > 0) { %>
+                        <div class="alert alert-danger"><%= message %></div>
+                    <% } %>
+                    <form id="sprop_select" action='/sprop-select' method="post">
+                        <select name="sname_select" id="sname_select">
+                            <option value="enhanced">Enhanced</option>
+                            <option value="ferret">The Ferret Business</option>
+                            <option value="vanilla">Vanilla</option>
+                        </select>
+                        <button id="openProp" type="button" class="btn btn-default btn-sm"><i class="fa fa-cog"></i> Open Properties</button>
+                    </form>
+                    <br /><br />
+                    <button id="startServ" type="button" class="btn btn-warning btn-md"> Open Console</button>
+                    <br /><br /><br />
+                    <div id="activeServer"></div>
+                    <br />
+                    <div id="online"></div>
+    			</div>
+    		</div>
+    	</div>
+	</div>
+</body>
+</html>
