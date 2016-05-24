@@ -5,6 +5,7 @@ var Skills = require('../app/models/skills');
 var Races = require('../app/models/races');
 var Classes = require('../app/models/classes');
 var async = require('async');
+var books = require('../app/models/DND_Books');
 
 module.exports = {
 
@@ -434,9 +435,22 @@ module.exports = {
 
 			formString += "</table>";
 
+			var bookString = "<select id='book' class='form-control' name='book'>";
+
+			for(var key in books) {
+				var value = books[key];
+				if (key == "PHB") {
+					bookString += "<option value='" + key + "' selected>" + value + "</option>";
+				} else {
+					bookString += "<option value='" + key + "'>" + value + "</option>";
+				}
+			}
+			bookString += "</select>";
+
 			req.DND = {
 				feats : {
-					form : formString
+					form : formString,
+					books : bookString
 				}
 			}
 
@@ -514,62 +528,21 @@ module.exports = {
 		 *  =============================================
 		 */
 		skillForm : function(req, res, next) {
-			var formString = "";
-			formString = "<section> " +
-						      "<div id='headers' class='headers'>" +
-						      "<div class='subHeader'>Name</div>" +
-							  "<div class='subHeader'>Classes</div>" +
-							  "<div class='subHeader'>Prime Attr</div>" +
-							  "<div class='subHeader'>Synergies</div>" +
-							  "<div class='subHeader'>Synergy Amt</div>" +
-							  "<div class='subHeader'>Notes</div>" +
-							  "<div class='subHeader'>Book</div>" +
-							  "<div class='subHeader'>Page</div>" +
-						      "</div>" +
-						      "<div class='container2'>" +
-						      "<table id='list-table' class='inputTable' cellspacing='2' >";
-			for (var i = 0; i < 401; i++) {
-				formString += "<tr class='inputTR'>";
-				formString += "<td class='inputTD'> " +
-								 "<input type='text' class='form-control' name='skillName" + i + "' size=15>" +
-							  "</td>";
-				formString += "<td class='inputTD'> " +
-								 "<textarea class='form-control' name='skillClass" + i + "' rows='4' cols='6'></textarea>" +
-							  "</td>";
-				formString += "<td class='inputTD'> " +
-								 "<select class='form-control' name='skillPAttr" + i + "'>" +
-								   "<option value='STR'>STR</option>" +
-								   "<option value='DEX'>DEX</option>" +
-								   "<option value='CON'>CON</option>" +
-								   "<option value='INT'>INT</option>" +
-								   "<option value='WIS'>WIS</option>" +
-								   "<option value='CHA'>CHA</option>" +
-								 "</select>" +
-							  "</td>";
-				formString += "<td class='inputTD'> " +
-								 "<textarea class='form-control' name='skillSyn" + i + "' rows='4' cols='6'></textarea>" +
-							  "</td>";
-				formString += "<td class='inputTD'> " +
-								 "<input type='text' class='form-control num' name='skillSynAmt" + i + "' size=4>" +
-							  "</td>";
-				formString += "<td class='inputTD'> " +
-								 "<textarea class='form-control' name='skillNotes" + i + "' rows='4' cols'6'></textarea>" +
-							  "</td>";
-				formString += "<td class='inputTD'> " +
-								 "<input type='text' class='form-control' name='skillBook" + i + "' size=4>" +
-							  "</td>";
-				formString += "<td class='inputTD'> " +
-								 "<input type='text' class='form-control num' name='skillPage" + i + "' size=2>" +
-							  "</td>";
-								
-				formString += "</tr>";
-			}
+			var bookString = "<select id='book' class='form-control' name='book'>";
 
-			formString += "</table></div></section>";
+			for(var key in books) {
+				var value = books[key];
+				if (key == "PHB") {
+					bookString += "<option value='" + key + "' selected>" + value + "</option>";
+				} else {
+					bookString += "<option value='" + key + "'>" + value + "</option>";
+				}
+			}
+			bookString += "</select>";
 
 			req.DND = {
 				skills : {
-					form : formString
+					books : bookString
 				}
 			}
 
@@ -578,50 +551,61 @@ module.exports = {
 
 		skillWrite : function(req, res, next) {
 			var data = req.body.data;
-			var skillSet = {};
-			var count = 0;
-			var entry = "";
-			for (var i = 0; i < data.length; i+=8) {
-				for (var x = 0; x < 8; x++) {
-					if (x == 7) {
-						entry += data[i+x].value;
-					} else {
-						entry += data[i+x].value + ",";
-					}
-				}
-				var temp = entry.split(',');
-				var newSkill = new Skills();
-				newSkill.name = temp[0];
-				newSkill.classes = temp[1];
-				newSkill.attribute = temp[2];
-				newSkill.synergies = temp[3];
-				newSkill.synerAmt = temp[4];
-				newSkill.notes = temp[5];
-				newSkill.book = temp[6];
-				newSkill.page = temp[7];
-
-				skillSet[count] = newSkill.save(function(err){
-					if(err)
-						return err;
-				});
-				count++;
-				entry = "";
-			}
-
-			async.forEach(skillSet, function(err, results) {
-				if(err)
-					return console.log(err);
-
-				console.log("skill written");
-			});
 			
-			req.DND = {
-				skills : {
-					error : "",
-					response : "<p>Skills successfully written</p>"
+			Skills.findOne({ 'name' : data[0].value}, function(err, skill) {
+				if (err) {
+					req.DND = {
+						skills : {
+							response : "",
+							error : err
+						}
+					}
+					next();
 				}
-			}
-			next();
+
+
+				if (skill) {
+					req.DND = {
+						skills : {
+							response : "That skill already exists",
+							error : ""
+						}
+					}
+					next();
+				} else {
+					var newSkill = new Skills();
+
+					newSkill.name = data[0].value;
+					newSkill.attribute = data[1].value;
+					newSkill.classes = data[2].value;
+					newSkill.synergies = data[3].value;
+					newSkill.short = data[4].value;
+					newSkill.desc = data[5].value;
+					newSkill.book = data[6].value;
+					newSkill.page = data[7].value;
+
+					newSkill.save(function(err) {
+						if(err) {
+							req.DND = {
+								skills : {
+									response : "",
+									error : err
+								}
+							}
+							next();
+						}
+
+						req.DND = {
+							skills : {
+								response : "Skill Added Successfully",
+								error : ""
+							}
+						}
+						next();
+					});
+
+				}
+			});
 		},
 
 		/** =============================================

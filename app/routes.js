@@ -512,11 +512,12 @@ module.exports = function(app, passport, io, ss, pollHandler, dataHandler) {
 		
 	});
 
-	app.get('/feats-entry', requestedOn, isLoggedIn, function(req, res) {
+	app.get('/feats-entry', requestedOn, isLoggedIn, dataHandler.DND.featForm, function(req, res) {
 		res.render('feats-entry.ejs', {
 			user : req.user,
 			error : "",
-			message : ""
+			message : "",
+			books : req.DND.feats.books
 		});
 	});
 
@@ -534,7 +535,7 @@ module.exports = function(app, passport, io, ss, pollHandler, dataHandler) {
 	app.get('/skills-entry', requestedOn, isLoggedIn, dataHandler.DND.skillForm, function(req, res) {
 		res.render('skills-entry.ejs', {
 			user : req.user,
-			formHtml : req.DND.skills.form
+			books : req.DND.skills.books
 		});
 	});
 

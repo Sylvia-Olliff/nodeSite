@@ -13,9 +13,6 @@
 
     <script type="text/javascript">
         jQuery(function() {
-            $('#Entry').html("<%- formHtml %>");
-            setHeaderCSS(8);
-
             $('.num').keypress(function(evt) {
                 var charCode = (evt.which) ? evt.which : evt.keyCode;
                 if (charCode > 31 && (charCode < 48 || charCode > 57)) {
@@ -25,35 +22,19 @@
             });
 
             $('#writeSkills').on('click', function(){
-                var skillsInfo = $('#skillsEntryForm').serializeArray();
-                skillsInfo = JSON.stringify(skillsInfo,null,2);
-                skillsData = JSON.parse(skillsInfo);
+                var skillData = $('#skillsEntryForm').serializeArray();
 
-                for (var i = 0; i < skillsData.length; i++) {
-                    if(skillsData[i].value == "") {
-                        delete skillsData[i]
-                    }
-                }
+                if ($('#skillName').val() == "") {
+                    alert("You must enter a name for the Skill!");
 
-                $.post("/skills-entry", {data : skillsData}, function(res){
-                    window.location.href = res.response;
-                });
-            });
-
-            function setHeaderCSS(size) {
-                var i;
-                var header = $('#headers').children();
-                var field = $('#list-table').children().children();
-                for(i = 0; i < size; i++) {             
-                    header.css("width", function(){
-                        var temp = field.width();
-                        return temp;    
+                } else if ($('#page').val() == "") {
+                    alert("You must enter a page number for the Skill!");
+                } else {
+                    $.post("/skills-entry", {data : skillData}, function(res){
+                        window.location.href = res.response;
                     });
-                    
-                    field = field.next();       
-                    header = header.next();
-                }           
-            }
+                }
+            });
         });
     </script>
 </head>
@@ -67,20 +48,65 @@
 
     	<div class="row">
 
-    		<div class="col-sm-6">
+    		<div class="col-sm-12">
     			<div class="well">
     				<h3>DO NOT USE UNLESS YOU HAVE BEEN CONTACTED BY JOE!</h3>
                     <ul>
-                        <li>For Synergies these are other skills that at rank 5 INCREASE THIS SKILL and are to be entered like so, "SkillA-SkillB,SkillA-SkillB,SkillC". SkillA and SkillB are a combination of two skills that at rank 5 increase this skill, SkillC is a single skill that at rank 5 increases this skill.</li> 
+                        <li>For comma delimited fields (ones that are seperated by commas) include no spaces between the end of one entry, the comma, and the beginning of the next entry. For example, a class skill that is for both Fighters and Monks you would put "Fighter,Monk"</li> 
                     </ul>
                     <button id='writeSkills' type='button' class='btn btn-warning btn-md'>Submit Skills</button>
     			</div>
+                <br />
+                <form id="skillsEntryForm">
+                    <table id="skillDetails">
+                        <tr>
+                            <td>
+                                <label for="skillName">Skill Name:</label>
+                                <input type="text" id="skillName" class="form-control" name="skillName" size="10">
+                            </td>
+                            <td>
+                                <label for="skillAttr">Skill Primary Attr:</label>
+                                <select id="skillAttr" name="skillAttr">
+                                    <option value="STR">Strength</option>
+                                    <option value="DEX">Dexterity</option>
+                                    <option value="CON">Constitution</option>
+                                    <option value="INT">Intelligence</option>
+                                    <option value="WIS">Wisdom</option>
+                                    <option value="CHA">Charisma</option>
+                                </select>
+                            </td>
+                            <td>
+                                <label for="skillClasses">Class Skill For (seperated by Commas):</label>
+                                <textarea id='skillClasses' class='form-control' name='skillClasses' rows='6' cols='8'></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="skillSyn">Gives Synergy Bonus to (seperated by Commas):</label>
+                                <input type="text" id="skillSyn" class="form-control" name="skillSyn" size="10">
+                            </td>
+                            <td>
+                                <label for="short">Short Description: </label>
+                                <input id="short" type='text' class='form-control' name='short' size='15'>
+                            </td>
+                            <td>
+                                <label for="long">Long Description: </label>
+                                <textarea id="long" class='form-control' name='long' rows='10' cols='30'></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="book">Book: </label>
+                                <%- books %>
+                                <label for="page">Page: </label>
+                                <input id="page" type='text' class='form-control num' name='page' size=4>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+                <br /><br /><br />
     		</div>
-
     	</div>
-        <form id="skillsEntryForm">
-            <div id="Entry"></div>
-        </form>
 	</div>
 </body>
 </html>
