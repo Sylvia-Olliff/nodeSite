@@ -532,6 +532,16 @@ module.exports = function(app, passport, io, ss, pollHandler, dataHandler) {
     	
 	});
 
+	app.get('/feats-view', requestedOn, isLoggedIn, function(req, res) {
+		res.render('feats-view.ejs', {
+			user : req.user
+		});
+	});
+
+	app.post('/feats-view', requestedOn, isLoggedIn, dataHandler.DND.featView, function(req, res) {
+		res.send(req.DND.feats.allFeats);
+	});
+
 	app.get('/skills-entry', requestedOn, isLoggedIn, dataHandler.DND.skillForm, function(req, res) {
 		res.render('skills-entry.ejs', {
 			user : req.user,
@@ -546,14 +556,39 @@ module.exports = function(app, passport, io, ss, pollHandler, dataHandler) {
     	
 	});
 
+	app.get('/skills-view', requestedOn, isLoggedIn, function(req, res) {
+
+		res.render('skills-view.ejs', {
+			user : req.user
+		});
+	});
+
+	app.post('/skills-view', requestedOn, isLoggedIn, dataHandler.DND.skillView, function(req, res) {
+		res.send(req.DND.skills.allSkills);
+	});
+
 	app.get('/races-entry', requestedOn, isLoggedIn, function(req, res) {
 		res.render('races-entry.ejs', {
 			user : req.user
 		});
 	});
 
+	app.get('/races-view', requestedOn, isLoggedIn, function(req, res) {
+
+		res.render('races-view.ejs', {
+			user : req.user
+		});
+	});
+
 	app.get('/classes-entry', requestedOn, isLoggedIn, function(req, res) {
 		res.render('classes-entry.ejs', {
+			user : req.user
+		});
+	});
+
+	app.get('/classes-view', requestedOn, isLoggedIn, function(req, res) {
+
+		res.render('classes-view.ejs', {
 			user : req.user
 		});
 	});

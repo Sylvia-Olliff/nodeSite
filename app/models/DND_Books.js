@@ -1,7 +1,7 @@
 //apps/models/DND_books
 
 module.exports = {
-				AN :       	"FR3 Anauroch:The Empire of Shade",
+		AN :       	"FR3 Anauroch:The Empire of Shade",
                 AE :        "Arms and Equipment Guide",
                 BFK :      	"Barrow of the Forgotten King",
                 BB :        "Bastion of Broken Souls",

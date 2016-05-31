@@ -24,14 +24,26 @@
             $('#featsEntry').on("click", function() {
                 window.location.href = "/feats-entry";
             });
+            $('#featsView').on("click", function() {
+                window.location.href = "/feats-view";
+            });
             $('#skillsEntry').on("click", function() {
                 window.location.href = "/skills-entry";
+            });
+            $('#skillsView').on("click", function() {
+                window.location.href = "/skills-view";
             });
             $('#racesEntry').on("click", function() {
                 window.location.href = "/races-entry";
             });
+            $('#racesView').on("click", function() {
+                window.location.href = "/races-view";
+            });
             $('#classesEntry').on("click", function() {
                 window.location.href = "/classes-entry";
+            });
+            $('#classesView').on("click", function() {
+                window.location.href = "/classes-view";
             });
         });
     </script>
@@ -63,6 +75,20 @@
                             </td>
                             <td>
                                 <input id="classesEntry" class="btn btn-warning btn-lg" type="button" value="Classes Entry" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input id="featsView" class="btn btn-warning btn-lg" type="button" value="View Feats" />
+                            </td>
+                            <td>
+                                <input id="skillsView" class="btn btn-warning btn-lg" type="button" value="View Skills" />
+                            </td>
+                            <td>
+                                <input id="racesView" class="btn btn-warning btn-lg" type="button" value="View Races" />
+                            </td>
+                            <td>
+                                <input id="classesView" class="btn btn-warning btn-lg" type="button" value="View Classes" />
                             </td>
                         </tr>
                     </table>

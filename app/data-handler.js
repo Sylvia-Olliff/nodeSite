@@ -523,6 +523,49 @@ module.exports = {
 			});			
 		},
 
+		featView : function(req, res, next) {
+			Feats.find({}, function(err, feats) {
+				if(err) {
+					console.log(err);
+					req.DND = {
+						feats : {
+							allFeats : "error"
+						}
+					}	
+					next();
+				}
+
+				var displayString = "<table id='featView'>";
+
+				for(var feat in feats) {
+
+					displayString += "<tr><td><label>Name: </label>" + feats[feat].name +
+									 "</td><td><label>PreReq: </label>" + feats[feat].prereq +
+									 "</td><td><label>Type: </label>" + feats[feat].type + "</td><td><pre>";
+					for(var item in feats[feat].details) {
+						displayString += "<label>" + item + ": </label>" + feats[feat].details[item] + "\n"; 
+					}
+
+					displayString += "</pre></td>" +
+									 "<td><label>Short: </label>" + feats[feat].short + "</td>" +
+									 "<td><label>Long: </label>" + feats[feat].desc + "</td>" +
+									 "<td><label>Book: </label>" + books[feats[feat].book] + "</td>" +
+									 "<td><label>Page: </label>" + feats[feat].page + "</td>" +
+									 "</tr>";
+
+				}
+
+				displayString += "</table>";
+				req.DND = {
+					feats : {
+						allFeats : displayString
+					}
+				}
+
+				next();
+			});
+		},
+
 		/** =============================================
 		 *  ==== SKILLS =================================
 		 *  =============================================
@@ -605,6 +648,45 @@ module.exports = {
 					});
 
 				}
+			});
+		},
+
+		skillView : function(req, res, next) {
+			Skills.find({}, function(err, skills) {
+				if(err) {
+					console.log(err);
+					req.DND = {
+						skills : {
+							allSkills : "error"
+						}
+					}	
+					next();
+				}
+
+				var displayString = "<table id='skillView'>";
+
+				for(var skill in skills) {
+
+					displayString += "<tr><td><label>Name: </label>" + skills[skill].name + "</td>" +
+									 "<td><label>Classes: </label>" + skills[skill].classes + "</td>" +
+									 "<td><label>Attribute: </label>" + skills[skill].attribute + "</td>" +
+									 "<td><label>Synergies: </label>" + skills[skill].synergies + "</td>" +
+									 "<td><label>Short: </label>" + skills[skill].short + "</td>" +
+									 "<td><label>Long: </label>" + skills[skill].desc + "</td>" +
+									 "<td><label>Book: </label>" + books[skills[skill].book] + "</td>" +
+									 "<td><label>Page: </label>" + skills[skill].page + "</td>" +
+									 "</tr>";
+
+				}
+
+				displayString += "</table>";
+				req.DND = {
+					skills : {
+						allSkills : displayString
+					}
+				}
+
+				next();
 			});
 		},
 

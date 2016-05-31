@@ -3,21 +3,26 @@
 var mongoose = require('mongoose');
 
 var classSchema = mongoose.Schema({
-	name : String,
-	prestige : Boolean,
-	caster : Boolean,
-	prereq : String,
-	skills : String,
-	feats : String,
-	bonusFeats : String,
-	abilities : {name : String, 
-				 desc : String,
-				 prereq : String, 
-				 lvl : Number, 
-				 statBonus : Boolean,
-				 skillBonus : Boolean,
-				 bonusAmt : Number},
-	spellDet : {lvl : Number, base : Number, type: String},
+	name : {type: String, required : true, unique : true},
+	alignment : {
+					LG : Boolean,
+					LN : Boolean,
+					LE : Boolean,
+					NG : Boolean,
+					TN : Boolean,
+					NE : Boolean,
+					CG : Boolean,
+					CN : Boolean,
+					CE : Boolean
+				},
+	skills : {type : String, required : true},
+	skillPoint : {type : Number, required : true},
+	proficiencies : {type : String},
+	saves : {
+				fortitude : Number,
+				reflex : Number,
+				will : Number
+			},
 	notes : String,
 	book : String,
 	page : Number
