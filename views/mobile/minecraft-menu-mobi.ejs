@@ -63,6 +63,20 @@
                     <button id="startServ" type="button" class="btn btn-warning btn-md"> Open Console</button>
                     <br /><br /><br />
                     <div id="activeServer"></div>
+                    <br /><br /><br /><br />
+                    <form id="uploadForm" action="/server-upload" method="POST" enctype="multipart/form-data" >
+                        <table id="profile_Properties">
+                            <tr>                        
+                                <td>
+                                    <label for="server_file">Upload Server Zipfile</label>
+                                    <input id="server_file" name="zip" class="form-control" type="file" />
+                                </td>
+                                <td>
+                                    <input id="server_file_submit" class="btn btn-default btn-md" type="submit" value="Submit Zipfile" />
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
     			</div>
     		</div>
     	</div>

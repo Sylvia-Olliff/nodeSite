@@ -1,26 +1,12 @@
 
 //app/routes.js
-module.exports = function(app, passport, io, ss, pollHandler, dataHandler) {
+module.exports = function(app, passport, profPicUploader, serverUploader, io, ss, pollHandler, dataHandler) {
 
 	var requestTime = function (req, res, next) {
 		process.env.TZ = 'USA/New York';
 		req.requestTime = new Date();
 		next();
 	};
-
-	var multer = require('multer');
-	var storage = multer.diskStorage({
-		destination: function(req, file, cb) {
-			cb(null, "D:\\www-test\\public\\uploads");
-		},
-		filename: function(req, file, cb) {
-			cb(null, file.fieldname + '-' + req.user.userData.username + '.png');
-		}
-	});
-	var uploading = multer({
-		storage : storage,
-		limits: {filesSize: 10000000, files: 1},
-	});
 
 	var fs = require('fs');
 	var servers = require('./models/servers');
@@ -444,6 +430,23 @@ module.exports = function(app, passport, io, ss, pollHandler, dataHandler) {
 		}
 	});
 
+	app.post('/server-upload', requestedOn, isLoggedIn, serverUploader.single('zip'), function(req, res) {
+		req.flash('uploadMessage', 'File Uploaded Successfully');
+		if (is_mobile(req)) {
+			res.render('mobile/minecraft-menu-mobi.ejs', { 
+				user : req.user,
+				message: req.flash('uploadMessage'),
+				active: ((server) ? servers.list[server].name : null)  
+			});
+		} else {
+			res.render('minecraft-menu.ejs', { 
+				user : req.user,
+				message: req.flash('uploadMessage'),
+				active: ((server) ? servers.list[server].name : null)  
+			});
+		}
+	});
+
 	//*******************************************
 	// USER PROFILE MENU ************************
 	//*******************************************	
@@ -461,7 +464,7 @@ module.exports = function(app, passport, io, ss, pollHandler, dataHandler) {
 		}
 	});
 
-	app.post('/pic-profile', requestedOn, isLoggedIn, uploading.single('image'), function(req, res) {
+	app.post('/pic-profile', requestedOn, isLoggedIn, profPicUploader.single('image'), function(req, res) {
 		req.flash('uploadMessage', 'File Uploaded Successfully');
 		var User = require('../app/models/user');
 		User.findOne({ 
