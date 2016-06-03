@@ -1,6 +1,6 @@
 
 //app/routes.js
-module.exports = function(app, passport, profPicUploader, serverUploader, io, ss, pollHandler, dataHandler) {
+module.exports = function(app, passport, profPicUploader, serverUploader, io, ss, pollHandler, dataHandler, zipHandler) {
 
 	var requestTime = function (req, res, next) {
 		process.env.TZ = 'USA/New York';

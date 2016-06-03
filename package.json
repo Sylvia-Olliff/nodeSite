@@ -16,6 +16,7 @@
     "socket.io-stream" : "latest",
     "multer" : "latest",
     "async" : "latest",
+    "adm-zip" : "latest",
 
     "morgan": "~1.0.0",
     "body-parser": "~1.0.0",

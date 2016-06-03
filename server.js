@@ -15,6 +15,7 @@ var passport = require('passport');
 var flash	 = require('connect-flash');
 var pollHandler = require('./app/poll-handler.js');
 var dataHandler = require('./app/data-handler.js');
+var zipHandler  = require('adm-zip');
 
 var morgan 	     = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -74,7 +75,7 @@ app.use(passport.session()); //Make login sessions persistent
 app.use(flash()); 
 
 //Routes **********************************************************************************
-require('./app/routes.js')(app, passport, profPicUploader, serverUploader, io, ss, pollHandler, dataHandler); //load routes and passport
+require('./app/routes.js')(app, passport, profPicUploader, serverUploader, io, ss, pollHandler, dataHandler, zipHandler); //load routes and passport
 
 //launch **********************************************************************************
 server.listen(port);
